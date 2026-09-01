@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planificación Nutricional — Ramón (Rumu) Martínez</title>
+<link rel="apple-touch-icon" href="Logo.png">
+<meta name="apple-mobile-web-app-title" content="NutriLogos">
+<meta name="application-name" content="NutriLogos">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #fff; color: #1a1a1a; padding: 1.5rem; max-width: 860px; margin: 0 auto; }
+
+  /* ── PLAN SEMANAL ── */
+  .pn-days { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .pn-day-btn { padding: 6px 14px; font-size: 13px; border: 1px solid #ccc; border-radius: 8px; background: transparent; color: #555; cursor: pointer; transition: background 0.15s; }
+  .pn-day-btn:hover { background: #f4f4f4; }
+  .pn-day-btn.active { background: #f0f0f0; color: #111; border-color: #888; font-weight: 500; }
+  .pn-meals { display: grid; gap: 10px; }
+  .pn-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 1rem 1.25rem; }
+  .pn-meal-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .pn-badge { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 8px; white-space: nowrap; }
+  .badge-d   { background: #EAF3DE; color: #3B6D11; }
+  .badge-a   { background: #E1F5EE; color: #0F6E56; }
+  .badge-me  { background: #EEEDFE; color: #3C3489; }
+  .badge-c   { background: #FAECE7; color: #993C1D; }
+  .badge-ce  { background: #F3E8FF; color: #6B21A8; }
+  .badge-libre { background: #FBEAF0; color: #993556; }
+  .pn-time { font-size: 12px; color: #aaa; }
+  .pn-name { font-size: 15px; font-weight: 500; color: #111; margin-bottom: 4px; }
+  .pn-note { font-size: 12px; color: #888; border-left: 2px solid #ddd; padding-left: 8px; line-height: 1.5; }
+  .pn-extra-tag { display: inline-block; font-size: 11px; font-weight: 500; background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; border-radius: 6px; padding: 2px 8px; margin-bottom: 6px; }
+  .pn-batch-tag  { display: inline-block; font-size: 11px; font-weight: 500; background: #FFF8E1; color: #795700; border: 1px solid #F0D060; border-radius: 6px; padding: 2px 8px; margin-bottom: 6px; }
+  .pn-receta-tag { display: inline-block; font-size: 11px; font-weight: 500; background: #F3E8FF; color: #6B21A8; border: 1px solid #DCC3F5; border-radius: 6px; padding: 2px 8px; margin-bottom: 6px; }
+  .pn-sport-banner { border-radius: 8px; padding: 8px 12px; font-size: 12px; margin-bottom: 10px; }
+  .pn-sport-banner.fuerza   { background: #E6F1FB; border: 1px solid #B5D4F4; color: #0C447C; }
+  .pn-sport-banner.run      { background: #EAF3DE; border: 1px solid #C0DD97; color: #27500A; }
+  .pn-sport-banner.crossfit { background: #FAEEDA; border: 1px solid #FAC775; color: #633806; }
+  .pn-sport-banner.rest     { background: #F1EFE8; border: 1px solid #D3D1C7; color: #444441; }
+  .pn-libre-banner { background: #FBEAF0; border: 1px solid #F4C0D1; border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #72243E; margin-bottom: 10px; }
+  .pn-supp-banner { background: #F3F0FB; border: 1px solid #C9BFEF; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #3C2E7A; margin-bottom: 10px; line-height: 1.7; }
+  .pn-batch-section { background: #FFFDE7; border: 1px solid #F0D060; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 10px; }
+  .pn-batch-section h3 { font-size: 13px; font-weight: 600; color: #795700; margin-bottom: 8px; }
+  .pn-batch-section ul { padding-left: 1.1rem; font-size: 13px; color: #555; line-height: 1.85; }
+  .pn-batch-section .bc-note { font-size: 12px; color: #888; margin-top: 10px; border-left: 2px solid #F0D060; padding-left: 8px; }
+  .pn-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid #e5e5e5; }
+  .pn-legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #777; }
+  h1 { font-size: 20px; font-weight: 500; margin-bottom: 0.25rem; }
+  .subtitle { font-size: 13px; color: #777; margin-bottom: 1.5rem; }
+
+  /* ── PERFIL DE LA PERSONA ── */
+  .pn-perfil { margin-bottom: 2rem; }
+  .pn-perfil-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 0.25rem; }
+  .pn-perfil-score { font-size: 12px; font-weight: 500; background: #EAF3DE; color: #3B6D11; border: 1px solid #C0DD97; border-radius: 8px; padding: 2px 10px; }
+  .pn-perfil-sub { font-size: 13px; color: #777; margin-bottom: 1rem; }
+  .pn-perfil-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px; }
+  .pn-perfil-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  @media (max-width: 600px) {
+    .pn-perfil-grid { grid-template-columns: repeat(2, 1fr); }
+    .pn-perfil-grid-2 { grid-template-columns: 1fr; }
+  }
+  .pn-metric { background: #f7f7f7; border-radius: 10px; padding: 0.75rem 1rem; }
+  .pn-metric-lbl { font-size: 11px; color: #999; margin-bottom: 3px; }
+  .pn-metric-val { font-size: 18px; font-weight: 500; color: #111; }
+  .pn-metric-sub { font-size: 11px; color: #bbb; margin-top: 2px; }
+  .pn-impresiones { border: 1px solid #e5e5e5; border-radius: 12px; padding: 1rem 1.25rem; }
+  .pn-impresiones-title { font-size: 12px; font-weight: 500; color: #999; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+  .pn-imp-item { font-size: 13px; color: #444; line-height: 1.65; padding: 0.4rem 0; border-bottom: 1px solid #f0f0f0; display: flex; gap: 8px; align-items: flex-start; }
+  .pn-imp-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .pn-imp-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
+  .pn-imp-dot-green { background: #1D9E75; }
+  .pn-imp-dot-blue  { background: #185FA5; }
+  .pn-imp-dot-amber { background: #BA7517; }
+  .pn-imp-dot-coral { background: #993C1D; }
+  .pn-perfil-divider { border: none; border-top: 1px solid #e5e5e5; margin: 1.5rem 0; }
+  .pn-perfil-section-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  @media (max-width: 600px) { .pn-perfil-section-row { grid-template-columns: 1fr; } }
+  .pn-antro-card { background: #f7f7f7; border-radius: 10px; padding: 0.75rem 1rem; }
+  .pn-antro-card-title { font-size: 11px; font-weight: 500; color: #999; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.6rem; }
+  .pn-antro-row { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; border-bottom: 1px solid #eee; color: #555; }
+  .pn-antro-row:last-child { border-bottom: none; }
+  .pn-antro-val { font-weight: 500; color: #111; }
+  .pn-bio-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 4px 0; border-bottom: 1px solid #eee; }
+  .pn-bio-row:last-child { border-bottom: none; }
+  .pn-bio-label { color: #777; }
+  .pn-bio-val { font-weight: 500; color: #111; }
+  .pn-bio-badge { font-size: 10px; padding: 1px 7px; border-radius: 6px; font-weight: 500; }
+  .bio-normal { background: #EAF3DE; color: #3B6D11; }
+  .bio-alto   { background: #E6F1FB; color: #185FA5; }
+  .bio-bajo   { background: #FBEAF0; color: #993556; }
+  .pn-soma-card { border: 1px solid #e5e5e5; border-radius: 10px; padding: 0.75rem 1rem; display: flex; align-items: center; }
+  .pn-soma-num { text-align: center; }
+  .pn-soma-num-val { font-size: 22px; font-weight: 500; color: #111; }
+  .pn-soma-num-lbl { font-size: 10px; color: #aaa; margin-top: 2px; }
+  .pn-soma-separator { color: #ddd; font-size: 20px; }
+  .section-label { font-size: 12px; font-weight: 500; color: #666; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.85rem; padding-bottom: 0.4rem; border-bottom: 1px solid #e8e8e8; }
+
+  /* ── LISTA DE COMPRA ── */
+  .pn-shop-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
+  .pn-shop-btn { padding: 6px 14px; font-size: 13px; border: 1px solid #ccc; border-radius: 8px; background: transparent; color: #555; cursor: pointer; transition: background 0.15s; }
+  .pn-shop-btn:hover { background: #f4f4f4; }
+  .pn-shop-btn.active { background: #f0f0f0; color: #111; border-color: #888; font-weight: 500; }
+  .pn-shop-btn.active.cat-prot  { background: #E6F1FB; border-color: #B5D4F4; color: #0C447C; }
+  .pn-shop-btn.active.cat-carb  { background: #FAEEDA; border-color: #FAC775; color: #633806; }
+  .pn-shop-btn.active.cat-fat   { background: #EAF3DE; border-color: #C0DD97; color: #27500A; }
+  .pn-shop-btn.active.cat-extra { background: #F1EFE8; border-color: #D3D1C7; color: #444441; }
+  .pn-shop-list { display: grid; gap: 8px; }
+  .pn-shop-item { border: 1px solid #e5e5e5; border-radius: 10px; padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 12px; cursor: pointer; transition: background 0.15s, opacity 0.15s; }
+  .pn-shop-item.cat-prot  { background: #f5f9fe; }
+  .pn-shop-item.cat-carb  { background: #fefaf5; }
+  .pn-shop-item.cat-fat   { background: #f6fbf2; }
+  .pn-shop-item.cat-extra { background: #f8f8f6; }
+  .pn-shop-item:hover { filter: brightness(0.97); }
+  .pn-shop-item.done { opacity: 0.38; }
+  .pn-shop-item.done .pn-shop-item-name { text-decoration: line-through; color: #aaa; }
+  .pn-shop-item-name { font-size: 13px; font-weight: 500; color: #111; }
+  .pn-shop-item-qty { font-size: 12px; font-weight: 500; color: #555; white-space: nowrap; text-align: right; }
+
+  /* ── INGREDIENTES ENCAPSULADOS EN COMIDAS ── */
+  .pn-ing-list { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+  .pn-ing { display: inline-block; font-size: 12px; background: #f4f4f4; border: 1px solid #e8e8e8; border-radius: 6px; padding: 3px 9px; color: #444; line-height: 1.4; }
+
+  /* ── SUPLEMENTACIÓN ── */
+  .pn-supl-block { background: #F3F0FB; border: 1px solid #C9BFEF; border-radius: 12px; padding: 1rem 1.25rem; }
+  .pn-supl-item { display: flex; gap: 10px; align-items: flex-start; padding: 0.5rem 0; border-bottom: 1px solid #DDD8F5; font-size: 13px; color: #333; line-height: 1.5; }
+  .pn-supl-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .pn-supl-dot { width: 6px; height: 6px; border-radius: 50%; background: #7C5CBF; flex-shrink: 0; margin-top: 6px; }
+
+  /* ── RECETAS ── */
+  .pn-receta { border: 1px solid #e5e5e5; border-radius: 12px; overflow: hidden; margin-bottom: 8px; }
+  .pn-receta-header { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1.25rem; cursor: pointer; background: #fafafa; transition: background 0.15s; user-select: none; }
+  .pn-receta-header:hover { background: #f3f3f3; }
+  .pn-receta-title { font-size: 14px; font-weight: 500; color: #111; display: flex; align-items: center; gap: 8px; }
+  .pn-receta-arrow { font-size: 12px; color: #aaa; transition: transform 0.2s; }
+  .pn-receta.open .pn-receta-arrow { transform: rotate(90deg); }
+  .pn-receta-body { display: none; padding: 1rem 1.25rem; border-top: 1px solid #e5e5e5; background: #fff; }
+  .pn-receta.open .pn-receta-body { display: block; }
+  .pn-receta-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1rem; }
+  .pn-receta-meta-pill { font-size: 11px; background: #f4f4f4; border: 1px solid #e8e8e8; border-radius: 6px; padding: 3px 10px; color: #555; }
+  .pn-receta-section { font-size: 11px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.5rem; margin-top: 0.85rem; }
+  .pn-receta-ings { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 0.5rem; }
+  .pn-receta-ing { font-size: 12px; background: #f4f4f4; border: 1px solid #e8e8e8; border-radius: 6px; padding: 3px 10px; color: #444; }
+  .pn-receta-steps { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .pn-receta-step { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: #444; line-height: 1.55; }
+  .pn-receta-step-num { min-width: 22px; height: 22px; border-radius: 50%; background: #f0f0f0; border: 1px solid #e0e0e0; font-size: 11px; font-weight: 600; color: #666; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .pn-receta-tip { font-size: 12px; color: #888; border-left: 2px solid #ddd; padding-left: 8px; margin-top: 0.75rem; line-height: 1.5; }
+
+  /* ── BOTÓN IMPRIMIR ── */
+  .pn-print-btn { display: inline-flex; align-items: center; gap: 7px; background: #0d3d4f; color: #fff; border: none; border-radius: 10px; padding: 10px 20px; font-size: 13px; font-weight: 500; cursor: pointer; letter-spacing: 0.02em; }
+  .pn-print-btn:hover { background: #0f4d63; }
+
+  /* ── IMPRESIÓN ── */
+  @media print {
+    @page { size: A4 landscape; margin: 1cm 1.2cm; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body > * { display: none !important; }
+    #printArea { display: block !important; }
+    #printArea {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      display: flex !important; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 0.5cm; box-sizing: border-box;
+    }
+    #printArea .section-label { font-size: 14px !important; margin-bottom: 0.5rem !important; color: #333 !important; }
+    #printArea table { width: 100% !important; min-width: unset !important; font-size: 11px !important; border-collapse: collapse !important; }
+    #printArea th { padding: 8px 6px !important; font-size: 10px !important; }
+    #printArea td { padding: 10px 8px !important; font-size: 11px !important; line-height: 1.4 !important; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .pn-print-btn { display: none !important; }
+    #printArea { page-break-inside: avoid; }
+    table { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Planificación Nutricional — Ramón (Rumu) Martínez</h1>
+<p class="subtitle">Preparación maratón sub-3h · Déficit ligero + periodización de CHO · Objetivo: Sevilla, 21 de febrero</p>
+
+<!-- BLOQUE DESCRIPCIÓN CLIENTE -->
+<div style="border:1px solid #e5e5e5;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem;background:#fafafa;">
+  <div style="font-size:11px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;">Descripción del cliente</div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;">
+    <div style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:6px 12px;font-size:12px;color:#333;">
+      <span style="color:#999;font-size:10px;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:2px;">Perfil</span>
+      Hombre · 35 años · 173 cm · 74,15 kg
+    </div>
+    <div style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:6px 12px;font-size:12px;color:#333;">
+      <span style="color:#999;font-size:10px;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:2px;">Contexto</span>
+      Empleado en Decathlon (tiempo parcial) y quiromasajista · Cocina en casa (15–45' entre semana + batch cooking opcional el domingo)
+    </div>
+    <div style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:6px 12px;font-size:12px;color:#333;">
+      <span style="color:#999;font-size:10px;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:2px;">Objetivo</span>
+      Maratón de Sevilla (21 febrero) · Bajar de 3h (~4:12–4:13 min/km)
+    </div>
+    <div style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:6px 12px;font-size:12px;color:#333;">
+      <span style="color:#999;font-size:10px;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:2px;">Hábitos</span>
+      Sin tabaco · Sueño 6–7h (percepción 7/10) · Estrés 4–5/10
+    </div>
+    <div style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:6px 12px;font-size:12px;color:#333;">
+      <span style="color:#999;font-size:10px;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:2px;">Aversiones / exclusiones</span>
+      Avena en copos / overnight oats (textura) · Leche de vaca (estreñimiento)
+    </div>
+  </div>
+</div>
+
+<!-- BLOQUE OBJETIVO -->
+<div style="background:#EBF3FB;border:1.5px solid #A8C8E8;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem;">
+  <div style="font-size:11px;font-weight:600;color:#1a4a72;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem;">Objetivo</div>
+  <p style="font-size:14px;font-weight:600;color:#0C3358;line-height:1.65;">Preparación para el Maratón de Sevilla (21 de febrero) con el objetivo de bajar de las 3 horas (~4:12–4:13 min/km). El plan combina una base 100% plant-based —con pescado como principal excepción animal, según su preferencia— con un ligero déficit calórico para optimizar el perfil de pliegues sin comprometer el rendimiento, y una periodización de carbohidratos alrededor de las sesiones más exigentes (series, fuerza, rodaje largo).</p>
+</div>
+
+<div class="pn-perfil">
+
+  <div class="pn-perfil-header">
+    <span style="font-size:15px;font-weight:500;color:#111">Perfil de la persona</span>
+    <span class="pn-perfil-score">Condición física 84,9 / 100</span>
+  </div>
+  <p class="pn-perfil-sub">Ramón Martínez · 35 años · Hombre · Valorado el 31/08/2026 por Guillermo Francés</p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;">
+    <a href="./assets/Antropometría RUMU 31-08-2026.pdf" target="_blank" style="display:inline-flex;align-items:center;gap:7px;background:#0d3d4f;color:#fff;text-decoration:none;border-radius:10px;padding:9px 18px;font-size:13px;font-weight:500;letter-spacing:0.02em;white-space:nowrap;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      Antropometría 31/08/2026
+    </a>
+    <a href="./assets/Bioimpedancia RUMU 31-08-2026.pdf" target="_blank" style="display:inline-flex;align-items:center;gap:7px;background:#0d3d4f;color:#fff;text-decoration:none;border-radius:10px;padding:9px 18px;font-size:13px;font-weight:500;letter-spacing:0.02em;white-space:nowrap;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      Bioimpedancia 31/08/2026
+    </a>
+  </div>
+
+  <div class="pn-perfil-grid" style="margin-bottom:10px">
+    <div class="pn-metric"><div class="pn-metric-lbl">Peso actual</div><div class="pn-metric-val">74,15 kg</div><div class="pn-metric-sub">IMC 24,78 · Normopeso</div></div>
+    <div class="pn-metric"><div class="pn-metric-lbl">Talla / envergadura</div><div class="pn-metric-val">173 / 181 cm</div><div class="pn-metric-sub">Macrocórmico · E. relativa 1,05</div></div>
+    <div class="pn-metric"><div class="pn-metric-lbl">% Masa grasa (Yuhasz)</div><div class="pn-metric-val">9,99 %</div><div class="pn-metric-sub">7,41 kg · Σ6 pliegues: 65,50 mm</div></div>
+    <div class="pn-metric"><div class="pn-metric-lbl">% Masa muscular</div><div class="pn-metric-val">44,95 %</div><div class="pn-metric-sub">33,33 kg · Z Phantom 2,07</div></div>
+  </div>
+  <div class="pn-perfil-grid" style="margin-bottom:10px">
+    <div class="pn-metric"><div class="pn-metric-lbl">LBM (masa libre de grasa)</div><div class="pn-metric-val">64,1 kg</div><div class="pn-metric-sub">Músculo esquelético: 41,4 kg</div></div>
+    <div class="pn-metric"><div class="pn-metric-lbl">TMB (bioimpedancia)</div><div class="pn-metric-val">1755 kcal</div><div class="pn-metric-sub">Edad metabólica: 35 años</div></div>
+    <div class="pn-metric"><div class="pn-metric-lbl">% Tejido adiposo</div><div class="pn-metric-val">23,89 %</div><div class="pn-metric-sub">17,71 kg (Ross y Kerr, 1993)</div></div>
+    <div class="pn-metric"><div class="pn-metric-lbl">Ratio cintura / cadera</div><div class="pn-metric-val">0,84</div><div class="pn-metric-sub">Riesgo cardiovascular bajo</div></div>
+  </div>
+
+  <!-- Somatotipo -->
+  <div style="margin-bottom:10px;margin-top:1.75rem">
+    <div class="section-label">Somatotipo (Carter-Heath)</div>
+    <div style="display:flex;gap:10px;align-items:stretch;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px;border:1px solid #e5e5e5;border-radius:10px;padding:0.75rem 1rem;display:flex;flex-direction:column;gap:10px;overflow:hidden;">
+        <div style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:4px;width:100%;min-width:0;">
+          <div style="text-align:center;min-width:0;">
+            <div style="font-size:22px;font-weight:500;color:#111;">3,22</div>
+            <div style="font-size:10px;color:#aaa;margin-top:2px;">Endomorfia</div>
+          </div>
+          <div style="color:#ddd;font-size:20px;text-align:center;">—</div>
+          <div style="text-align:center;min-width:0;">
+            <div style="font-size:22px;font-weight:500;color:#185FA5;">5,37</div>
+            <div style="font-size:10px;color:#aaa;margin-top:2px;">Mesomorfia</div>
+          </div>
+          <div style="color:#ddd;font-size:20px;text-align:center;">—</div>
+          <div style="text-align:center;min-width:0;">
+            <div style="font-size:22px;font-weight:500;color:#111;">1,57</div>
+            <div style="font-size:10px;color:#aaa;margin-top:2px;">Ectomorfia</div>
+          </div>
+        </div>
+        <div style="text-align:center;border-top:1px solid #f0f0f0;padding-top:8px;">
+          <div style="font-size:13px;font-weight:500;color:#185FA5;">Mesomorfo-endomórfico</div>
+          <div style="font-size:11px;color:#aaa;">Valoración actual</div>
+        </div>
+      </div>
+      <div class="pn-metric" style="flex:1;min-width:200px">
+        <div class="pn-metric-lbl">Valoración previa</div>
+        <div style="font-size:14px;font-weight:500;color:#555;margin-top:4px">Primera valoración</div>
+        <div class="pn-metric-sub">Sin datos previos — esta es la valoración de referencia (baseline)</div>
+      </div>
+      <div class="pn-metric" style="flex:1;min-width:200px">
+        <div class="pn-metric-lbl">Grupo de referencia (ISAK)</div>
+        <div style="font-size:14px;font-weight:500;color:#555;margin-top:4px">1,60 — 4,80 — 1,80</div>
+        <div class="pn-metric-sub">Algo más de componente graso y muscular que el corredor de fondo tipo; ectomorfia similar</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Antropometría + Bioimpedancia -->
+  <div class="pn-perfil-section-row" style="margin-top:1.75rem">
+    <div>
+      <div class="section-label">Datos antropométricos clave</div>
+      <div class="pn-antro-card">
+        <div class="pn-antro-card-title">Pliegues cutáneos</div>
+        <div class="pn-antro-row"><span>Tríceps</span><span class="pn-antro-val">6,50 mm</span></div>
+        <div class="pn-antro-row"><span>Subescapular</span><span class="pn-antro-val">11,00 mm</span></div>
+        <div class="pn-antro-row"><span>Bíceps</span><span class="pn-antro-val">2,50 mm</span></div>
+        <div class="pn-antro-row"><span>Cresta ilíaca</span><span class="pn-antro-val">20,50 mm</span></div>
+        <div class="pn-antro-row"><span>Supraespinal</span><span class="pn-antro-val">14,50 mm</span></div>
+        <div class="pn-antro-row"><span>Abdominal</span><span class="pn-antro-val">19,50 mm</span></div>
+        <div class="pn-antro-row"><span>Muslo</span><span class="pn-antro-val">9,00 mm</span></div>
+        <div class="pn-antro-row"><span>Pierna</span><span class="pn-antro-val">5,00 mm</span></div>
+        <div class="pn-antro-row" style="margin-top:4px;padding-top:6px;border-top:1px solid #ddd"><span style="font-weight:500">Σ6 pliegues</span><span class="pn-antro-val" style="color:#185FA5">65,50 mm</span></div>
+        <div class="pn-antro-row"><span style="font-weight:500">Σ8 pliegues</span><span class="pn-antro-val">88,50 mm</span></div>
+      </div>
+      <div class="pn-antro-card" style="margin-top:10px">
+        <div class="pn-antro-card-title">Perímetros</div>
+        <div class="pn-antro-row"><span>Cintura</span><span class="pn-antro-val">80,60 cm</span></div>
+        <div class="pn-antro-row"><span>Cadera</span><span class="pn-antro-val">96,40 cm</span></div>
+        <div class="pn-antro-row"><span>Brazo relajado / contraído</span><span class="pn-antro-val">30,00 / 30,60 cm</span></div>
+        <div class="pn-antro-row"><span>Muslo / pierna</span><span class="pn-antro-val">58,00 / 38,00 cm</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Datos bioimpedancia</div>
+      <div class="pn-antro-card">
+        <div class="pn-antro-card-title">Composición corporal</div>
+        <div class="pn-bio-row"><span class="pn-bio-label">Agua corporal</span><div style="display:flex;gap:6px;align-items:center"><span class="pn-bio-val">46,3 L</span><span class="pn-bio-badge bio-normal">Normal</span></div></div>
+        <div class="pn-bio-row"><span class="pn-bio-label">Proteína</span><div style="display:flex;gap:6px;align-items:center"><span class="pn-bio-val">14,6 kg</span><span class="pn-bio-badge bio-alto">Alto</span></div></div>
+        <div class="pn-bio-row"><span class="pn-bio-label">Masa ósea</span><div style="display:flex;gap:6px;align-items:center"><span class="pn-bio-val">3,21 kg</span><span class="pn-bio-badge bio-normal">Normal</span></div></div>
+        <div class="pn-bio-row"><span class="pn-bio-label">Masa grasa corporal</span><div style="display:flex;gap:6px;align-items:center"><span class="pn-bio-val">10,01 kg</span><span class="pn-bio-badge bio-normal">Normal</span></div></div>
+        <div class="pn-bio-row"><span class="pn-bio-label">% Grasa (PBF)</span><div style="display:flex;gap:6px;align-items:center"><span class="pn-bio-val">13,5 %</span><span class="pn-bio-badge bio-normal">Normal</span></div></div>
+        <div class="pn-bio-row"><span class="pn-bio-label">Músculo esquelético</span><div style="display:flex;gap:6px;align-items:center"><span class="pn-bio-val">41,4 kg</span><span class="pn-bio-badge bio-alto">Alto</span></div></div>
+        <div class="pn-bio-row"><span class="pn-bio-label">Grasa visceral</span><div style="display:flex;gap:6px;align-items:center"><span class="pn-bio-val">Nivel 7</span><span class="pn-bio-badge bio-normal">Normal</span></div></div>
+      </div>
+      <div class="pn-antro-card" style="margin-top:10px">
+        <div class="pn-antro-card-title">Fuerza y equilibrio muscular</div>
+        <div class="pn-bio-row"><span class="pn-bio-label">Fuerza superior</span><span class="pn-bio-badge bio-normal">Normal</span></div>
+        <div class="pn-bio-row"><span class="pn-bio-label">Fuerza inferior</span><span class="pn-bio-badge bio-normal">Normal</span></div>
+        <div class="pn-bio-row"><span class="pn-bio-label">Equilibrio superior</span><span class="pn-bio-badge bio-bajo">Ligero desequilibrio</span></div>
+        <div class="pn-bio-row"><span class="pn-bio-label">Equilibrio inferior</span><span class="pn-bio-badge bio-bajo">Ligero desequilibrio</span></div>
+        <div class="pn-bio-row"><span class="pn-bio-label">IMC</span><div style="display:flex;gap:6px;align-items:center"><span class="pn-bio-val">24,8</span><span class="pn-bio-badge bio-normal">Normal</span></div></div>
+      </div>
+      <div class="pn-antro-card" style="margin-top:10px">
+        <div class="pn-antro-card-title">Control de peso (objetivo)</div>
+        <div class="pn-bio-row"><span class="pn-bio-label">Peso deseado</span><span class="pn-bio-val">75,46 kg</span></div>
+        <div class="pn-bio-row"><span class="pn-bio-label">Control de grasa</span><span class="pn-bio-val">+1,31 kg</span></div>
+        <div class="pn-bio-row"><span class="pn-bio-label">Control muscular</span><span class="pn-bio-val">+0 kg</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Impresiones del profesional -->
+  <div style="margin-top:1.75rem">
+    <div class="section-label">Impresiones del profesional</div>
+    <div class="pn-impresiones">
+      <div class="pn-imp-item"><div class="pn-imp-dot pn-imp-dot-green"></div><div><strong>Composición corporal muy favorable de partida.</strong> IMC normopeso, % graso bajo por ambos métodos, masa muscular elevada y sin patologías, cirugías ni medicación — buen punto de partida para un bloque de rendimiento.</div></div>
+      <div class="pn-imp-item"><div class="pn-imp-dot pn-imp-dot-blue"></div><div><strong>Primera valoración — arranca bloque específico.</strong> Se inicia planificación orientada al maratón de Sevilla (21 de febrero), objetivo sub-3h, con periodización de carbohidratos y ligero déficit calórico.</div></div>
+      <div class="pn-imp-item"><div class="pn-imp-dot pn-imp-dot-amber"></div><div><strong>Perfil de pliegues y tejido adiposo a optimizar.</strong> Σ6 pliegues (65,50 mm) y % tejido adiposo (23,89%) algo elevados para el objetivo de rendimiento buscado. Como referencia de báscula, parte de un 13,5% de grasa (PBF) y el objetivo con el déficit acordado es bajar progresivamente hacia un 12–12,5%, lo que justifica el ligero déficit pactado (~230 kcal/día de media).</div></div>
+      <div class="pn-imp-item"><div class="pn-imp-dot pn-imp-dot-coral"></div><div><strong>Ligero desequilibrio muscular superior/inferior.</strong> Se observa en bioimpedancia un desequilibrio leve entre lados — valorar trabajo unilateral en las sesiones de fuerza para corregirlo progresivamente.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<hr class="pn-perfil-divider">
+
+<div id="printArea" style="margin-bottom:1.5rem">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.85rem;padding-bottom:0.4rem;border-bottom:1px solid #e8e8e8;">
+    <div class="section-label" style="margin:0;padding:0;border:none;">Menú semanal de un vistazo</div>
+    <button class="pn-print-btn" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+  </div>
+  <div style="overflow-x:auto;border-radius:12px;border:1px solid #e5e5e5;">
+    <table style="width:100%;border-collapse:collapse;min-width:700px;font-size:12px;">
+      <thead>
+        <tr>
+          <th style="background:#dce8f5;color:#1a2e44;padding:9px 10px;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-right:1px solid #c5d8ed;width:46px;"></th>
+          <th style="background:#dce8f5;color:#1a2e44;padding:9px 10px;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-right:1px solid #c5d8ed;">Lunes</th>
+          <th style="background:#dce8f5;color:#1a2e44;padding:9px 10px;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-right:1px solid #c5d8ed;">Martes</th>
+          <th style="background:#dce8f5;color:#1a2e44;padding:9px 10px;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-right:1px solid #c5d8ed;">Miércoles</th>
+          <th style="background:#dce8f5;color:#1a2e44;padding:9px 10px;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-right:1px solid #c5d8ed;">Jueves</th>
+          <th style="background:#dce8f5;color:#1a2e44;padding:9px 10px;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-right:1px solid #c5d8ed;">Viernes</th>
+          <th style="background:#dce8f5;color:#1a2e44;padding:9px 10px;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-right:1px solid #c5d8ed;">Sábado</th>
+          <th style="background:#dce8f5;color:#1a2e44;padding:9px 10px;text-align:center;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Domingo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="background:#f7f7f7;padding:8px 6px;border-right:2px solid #e0e0e0;border-bottom:1px solid #eee;text-align:center;vertical-align:middle;"><span class="pn-badge badge-d" style="display:inline-block;">D</span></td>
+          <td style="background:#f9fcf5;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Tostada integral + hummus/aguacate</td>
+          <td style="background:#f9fcf5;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Tostada integral + filadelfia light</td>
+          <td style="background:#f9fcf5;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Cereales de avena + bebida soja</td>
+          <td style="background:#f9fcf5;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Tostada integral + hummus</td>
+          <td style="background:#f9fcf5;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Porridge harina de avena</td>
+          <td style="background:#f9fcf5;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Tostada integral + filadelfia light</td>
+          <td style="background:#f9fcf5;padding:8px 10px;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Cereales de avena + bebida soja</td>
+        </tr>
+        <tr>
+          <td style="background:#f7f7f7;padding:8px 6px;border-right:2px solid #e0e0e0;border-bottom:1px solid #eee;text-align:center;vertical-align:middle;"><span class="pn-badge badge-a" style="display:inline-block;">A</span></td>
+          <td style="background:#f2fbf8;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Fruta + frutos secos</td>
+          <td style="background:#f2fbf8;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Tostada con hummus</td>
+          <td style="background:#f2fbf8;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Yogur de soja + fruta</td>
+          <td style="background:#f2fbf8;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Fruta + frutos secos</td>
+          <td style="background:#f2fbf8;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Tostada con hummus</td>
+          <td style="background:#f2fbf8;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Fruta + frutos secos</td>
+          <td style="background:#f2fbf8;padding:8px 10px;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Yogur de soja + fruta</td>
+        </tr>
+        <tr>
+          <td style="background:#f7f7f7;padding:8px 6px;border-right:2px solid #e0e0e0;border-bottom:1px solid #eee;text-align:center;vertical-align:middle;"><span class="pn-badge badge-c" style="display:inline-block;">C</span></td>
+          <td style="background:#f3fdf8;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Lentejas con verduras y salmón</td>
+          <td style="background:#f3fdf8;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Pasta blanca con atún</td>
+          <td style="background:#f3fdf8;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Garbanzos, arroz integral y caballa</td>
+          <td style="background:#f3fdf8;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Pasta blanca con atún</td>
+          <td style="background:#f3fdf8;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Edamame y tofu con quinoa</td>
+          <td style="background:#f3fdf8;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Pasta blanca con atún (carga)</td>
+          <td style="background:#f3fdf8;padding:8px 10px;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Lentejas con verduras y salmón</td>
+        </tr>
+        <tr>
+          <td style="background:#f7f7f7;padding:8px 6px;border-right:2px solid #e0e0e0;border-bottom:1px solid #eee;text-align:center;vertical-align:middle;"><span class="pn-badge badge-me" style="display:inline-block;">Me</span></td>
+          <td style="background:#f5f3ff;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Fruta</td>
+          <td style="background:#f5f3ff;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Fruta + avena + café</td>
+          <td style="background:#f5f3ff;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Fruta + avena</td>
+          <td style="background:#f5f3ff;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Fruta + avena + café</td>
+          <td style="background:#f5f3ff;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Fruta</td>
+          <td style="background:#f5f3ff;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Fruta + avena</td>
+          <td style="background:#f5f3ff;padding:8px 10px;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Fruta</td>
+        </tr>
+        <tr>
+          <td style="background:#f7f7f7;padding:8px 6px;border-right:2px solid #e0e0e0;text-align:center;vertical-align:middle;"><span class="pn-badge badge-ce" style="display:inline-block;">Ce</span></td>
+          <td style="background:#fdf8ff;padding:8px 10px;border-right:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Tofu salteado con verduras y patata</td>
+          <td style="background:#fdf8ff;padding:8px 10px;border-right:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Pescado blanco con verduras y arroz</td>
+          <td style="background:#fdf8ff;padding:8px 10px;border-right:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Tofu marinado (teriyaki) con verduras y patata</td>
+          <td style="background:#fdf8ff;padding:8px 10px;border-right:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Merluza con verduras y quinoa</td>
+          <td style="background:#fdf8ff;padding:8px 10px;border-right:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Pescado blanco con verduras y patata</td>
+          <td style="background:#fbeaf0;color:#72243E;font-style:italic;padding:8px 10px;border-right:1px solid #eee;text-align:center;line-height:1.4;">Libre</td>
+          <td style="background:#fdf8ff;padding:8px 10px;text-align:center;color:#333;line-height:1.4;">Tofu/legumbre con verduras (ligera)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid #e5e5e5;">
+  <div class="section-label">Menú desarrollado por días</div>
+  <div class="pn-days" id="dayTabs"></div>
+  <div id="dayView"></div>
+  <div class="pn-legend">
+    <span style="font-size:12px;color:#aaa;margin-right:4px;">Comidas:</span>
+    <span class="pn-legend-item"><span class="pn-badge badge-d">D</span> Desayuno</span>
+    <span class="pn-legend-item"><span class="pn-badge badge-a">A</span> Media mañana</span>
+    <span class="pn-legend-item"><span class="pn-badge badge-c">C</span> Comida</span>
+    <span class="pn-legend-item"><span class="pn-badge badge-me">Me</span> Merienda</span>
+    <span class="pn-legend-item"><span class="pn-badge badge-ce">Ce</span> Cena</span>
+  </div>
+</div>
+
+<div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid #e5e5e5;">
+  <div class="section-label">Lista de compra semanal</div>
+  <div class="pn-shop-tabs" id="shopTabs"></div>
+  <div id="shopView"></div>
+</div>
+
+<div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid #e5e5e5;">
+  <div class="section-label">Suplementación recomendada</div>
+  <div class="pn-supl-block">
+    <div class="pn-supl-item"><div class="pn-supl-dot"></div><div><strong>Cafeína (café)</strong> — pre-entreno en días de series, fuerza y rodaje largo. Ayuda ergogénica bien respaldada; se prioriza en formato café sobre pastilla. En las sesiones de tarde es opcional: puede mejorar el rendimiento, pero tomada varias horas antes de dormir puede empeorar la calidad del sueño — decide tú según cómo te sienta ese día.</div></div>
+    <div class="pn-supl-item"><div class="pn-supl-dot"></div><div><strong>Carbohidratos intra-entreno</strong> — geles, isotónico o maltodextrina/dextrosas en salidas de bici o tiradas largas superiores a 2h: 60–90 g CHO/hora. Se irá incorporando de forma progresiva en las tiradas largas de cara al maratón.</div></div>
+    <div class="pn-supl-item"><div class="pn-supl-dot"></div><div><strong>Magnesio + Ashwagandha</strong> — antes de dormir. Evidencia limitada de efecto real, pero se mantiene porque te funciona (mejora percibida del descanso) y no hay contraindicación.</div></div>
+    <div class="pn-supl-item"><div class="pn-supl-dot"></div><div><strong>Batido de proteína</strong> — uso puntual, no como sustitución habitual de comidas. Reservado para momentos de verdadera falta de tiempo o apetito.</div></div>
+  </div>
+</div>
+
+<div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid #e5e5e5;">
+  <div class="section-label">Recetas</div>
+  <div id="recetasList"></div>
+</div>
+
+<div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid #e5e5e5;">
+  <div class="section-label">Próxima revisión</div>
+  <div style="display:flex;align-items:center;gap:14px;background:#fafafa;border:1px solid #e5e5e5;border-radius:12px;padding:1rem 1.25rem;flex-wrap:wrap;">
+    <div style="font-size:28px;">📅</div>
+    <div style="flex:1;min-width:200px;">
+      <div style="font-size:16px;font-weight:500;color:#111;">5 de octubre de 2026</div>
+      <div style="font-size:12px;color:#999;margin-top:3px;">Valoración antropométrica + bioimpedancia · Revisión de adherencia y sensaciones · Ajuste de plan si procede</div>
+    </div>
+    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Revisi%C3%B3n+nutricional+%E2%80%94+Ram%C3%B3n+Mart%C3%ADnez&dates=20261005T080000Z%2F20261005T090000Z&details=Valoraci%C3%B3n+antropom%C3%A9trica+%2B+bioimpedancia.+Revisi%C3%B3n+de+adherencia+y+sensaciones.+Ajuste+de+plan+si+procede.&location=NutriLogos" target="_blank" style="display:inline-flex;align-items:center;gap:7px;background:#0d3d4f;color:#fff;text-decoration:none;border-radius:10px;padding:9px 18px;font-size:13px;font-weight:500;letter-spacing:0.02em;white-space:nowrap;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Añadir al calendario
+    </a>
+  </div>
+</div>
+
+<script>
+const days = [
+  {
+    short: "Lun",
+    full: "Lunes",
+    sport: "🏃 Rodaje suave",
+    sportClass: "run",
+    sportBanner: "Rodaje de 10-12km a ritmo suave. Objetivo ~2600 kcal — día de menor carga de hidrato, la legumbre del mediodía cubre bien la demanda energética.",
+    suppl: null,
+    libre: false,
+    meals: [
+      { type:"D", time:"8:15", name:"Tostada integral con hummus y aguacate", tags:[], desc:"Pan integral tostado (2 rebanadas)\nHummus\n1/4 aguacate\nCafé con bebida de soja o avellana\nFruta de temporada", note:"Sustituye la tostada con filadelfia y el café con leche de vaca por esta opción, manteniendo el café pero con la bebida vegetal." },
+      { type:"A", time:"11:30", name:"Fruta + frutos secos", tags:[], desc:"Pieza de fruta\nFrutos secos (25-30g)", note:"Sustituye a la barrita proteica del trabajo. Si algún día tienes mucho ajetreo o simplemente te apetece, la barrita también tiene cabida puntualmente." },
+      { type:"C", time:"14:30", name:"Lentejas estofadas con verduras y salmón", tags:["receta"], desc:"Lentejas cocidas (150-180g)\nVerduras salteadas (calabacín, zanahoria, pimiento)\nSalmón a la plancha (120-150g)\nAOVE", note:"Legumbre como base proteica+CHO; sin necesidad de carga extra de hidrato en día de rodaje suave. Receta completa más abajo." },
+      { type:"Me", time:"17:30", name:"Fruta", tags:[], desc:"Pieza de fruta de temporada", note:"Snack ligero de media tarde." },
+      { type:"Ce", time:"21:30", name:"Tofu salteado con verduras y patata", tags:[], desc:"Tofu firme salteado (150g)\nVerduras al gusto\nPatata (200g)\nAOVE", note:"Cena ligera con proteína vegetal. La patata puede hacerse cocida, al horno o en air fryer — al gusto." }
+    ],
+    batchCooking: null
+  },
+  {
+    short: "Mar",
+    full: "Martes",
+    sport: "⚡ Series",
+    sportClass: "crossfit",
+    sportBanner: "Series cortas o largas de alta intensidad. Objetivo ~2900 kcal — carga de hidrato de rápida digestión antes de la sesión.",
+    suppl: null,
+    libre: false,
+    meals: [
+      { type:"D", time:"8:15", name:"Tostada integral con filadelfia light", tags:[], desc:"Pan integral tostado (2 rebanadas)\nFiladelfia light\nCafé con bebida de soja o avellana\nFruta", note:"Mantenemos esta opción como preferencia habitual; solo cambia la leche de vaca por bebida de soja, manteniendo el café con leche de siempre." },
+      { type:"A", time:"11:30", name:"Tostada con hummus (o barrita puntual)", tags:[], desc:"Pan integral o tortitas de arroz\nHummus\nFruta", note:"Sustituye a la barrita habitual. Si tienes mucho ajetreo o te apetece, la barrita tiene cabida puntualmente." },
+      { type:"C", time:"14:30", name:"Pasta blanca con atún y AOVE", tags:[], desc:"Pasta blanca (75-80g en crudo)\nAtún al natural (1-2 latas)\nAOVE\nTomate o verdura salteada", note:"Carga de hidrato de rápida digestión antes de las series de la tarde." },
+      { type:"Me", time:"17:30", name:"Fruta + café pre-entreno", tags:[], desc:"Pieza de fruta\nPuñado de cereales de avena Mercadona (20-25g)\nCafé (opcional, aliado ergogénico)", note:"El café 30-60' antes de la sesión de series ayuda al rendimiento, aunque tomado por la tarde puede restar calidad al sueño — decide tú según cómo te sienta ese día. El puñado de cereales aporta algo más de hidrato para la sesión de series." },
+      { type:"Ce", time:"21:30", name:"Filete de pescado blanco con verduras y arroz", tags:[], desc:"Merluza o similar a la plancha (150g)\nVerduras al vapor o salteadas\nArroz integral, quinoa, cuscús o boniato (una ración)\nAOVE", note:"Cena post-series: en días de series/rodaje el carbohidrato nocturno es necesario para reponer el glucógeno, no solo proteína y verdura." }
+    ],
+    batchCooking: null
+  },
+  {
+    short: "Mié",
+    full: "Miércoles",
+    sport: "🏋️ Fuerza + carrera ligera",
+    sportClass: "fuerza",
+    sportBanner: "Fuerza en gimnasio (hipertrofia, fuerza y core en tres bloques) + carrera ligera después. Objetivo ~2900 kcal.",
+    suppl: null,
+    libre: false,
+    meals: [
+      { type:"D", time:"8:15", name:"Cereales de avena con bebida de soja", tags:[], desc:"Cereales de avena Mercadona (50-60g)\nCafé con bebida de soja o avellana\nFruta troceada", note:"Alternativa a copos/overnight oats que no le entran por textura." },
+      { type:"A", time:"11:30", name:"Yogur de soja con fruta", tags:[], desc:"Yogur de soja\nFruta\nFrutos secos", note:"Sustituye a la barrita habitual; también tiene cabida puntual si tienes ajetreo." },
+      { type:"C", time:"14:30", name:"Garbanzos con arroz integral y caballa", tags:[], desc:"Garbanzos cocidos (150-180g)\nArroz integral (60g en crudo)\nCaballa a la plancha (120g)\nVerduras\nZumo de limón, comino y pimentón", note:"Combinación legumbre+cereal para completar aminoácidos; buena carga antes de fuerza. El limón, comino y pimentón dan un toque de sabor sin apenas sumar calorías." },
+      { type:"Me", time:"17:30", name:"Fruta + puñado de cereales de avena", tags:[], desc:"Pieza de fruta\nPuñado de cereales de avena Mercadona (20-25g)", note:"Día fuerte (fuerza + carrera) — el puñado de cereales aporta algo más de hidrato de cara al entreno de la tarde." },
+      { type:"Ce", time:"21:30", name:"Tofu marinado con verduras y patata", tags:["batch","receta"], desc:"Tofu marinado (150g)\n1 cucharada sopera de salsa teriyaki\nVerduras asadas\nPatata (200g)\nAOVE", note:"Usa el tofu marinado preparado en el batch cooking del domingo; la salsa teriyaki le da un toque extra de sabor. La patata puede hacerse al horno o en air fryer. Receta completa más abajo." }
+    ],
+    batchCooking: null
+  },
+  {
+    short: "Jue",
+    full: "Jueves",
+    sport: "⚡ Series (cambios de ritmo)",
+    sportClass: "crossfit",
+    sportBanner: "Series de cambios de ritmo. Objetivo ~2900 kcal — carga de hidrato habitual antes de la sesión.",
+    suppl: null,
+    libre: false,
+    meals: [
+      { type:"D", time:"8:15", name:"Tostada integral con hummus", tags:[], desc:"Pan integral tostado (2 rebanadas)\nHummus\nCafé con bebida de soja\nFruta", note:"" },
+      { type:"A", time:"11:30", name:"Fruta + frutos secos", tags:[], desc:"Pieza de fruta\nFrutos secos (25-30g)", note:"Sustituye a la barrita habitual; también tiene cabida puntual si tienes ajetreo o te apetece." },
+      { type:"C", time:"14:30", name:"Pasta blanca con atún y AOVE", tags:[], desc:"Pasta blanca (75-80g en crudo)\nAtún al natural\nAOVE\nVerdura salteada", note:"Carga de hidrato habitual antes de la sesión de cambios de ritmo." },
+      { type:"Me", time:"17:30", name:"Fruta + café pre-entreno", tags:[], desc:"Pieza de fruta\nPuñado de cereales de avena Mercadona (20-25g)\nCafé (opcional)", note:"Día de series — el café es opcional y puede ayudar al rendimiento, aunque por la tarde puede restar calidad al sueño; decide tú. El puñado de cereales aporta algo más de hidrato." },
+      { type:"Ce", time:"21:30", name:"Merluza con verduras y quinoa", tags:[], desc:"Merluza a la plancha (150g)\nVerduras al vapor\nQuinoa, arroz integral, cuscús o boniato (una ración)\nAOVE", note:"En día de series el carbohidrato nocturno es necesario para reponer glucógeno, no solo proteína y verdura." }
+    ],
+    batchCooking: null
+  },
+  {
+    short: "Vie",
+    full: "Viernes",
+    sport: "🏃 Rodaje suave",
+    sportClass: "run",
+    sportBanner: "Rodaje suave. Objetivo ~2600 kcal — día de base 100% vegetal, sin necesidad de carga extra.",
+    suppl: null,
+    libre: false,
+    meals: [
+      { type:"D", time:"8:15", name:"Porridge de harina de avena", tags:["receta"], desc:"Harina de avena (40-50g) cocinada tipo gachas\nCafé con bebida de soja\nFruta\nCanela", note:"Textura tipo gachas, no copos — mejor aceptación que el overnight oats. Receta completa más abajo." },
+      { type:"A", time:"11:30", name:"Tostada con hummus (o barrita puntual)", tags:[], desc:"Pan integral o tortitas de arroz\nHummus\nFruta", note:"Sustituye a la barrita habitual; también tiene cabida puntual si te apetece." },
+      { type:"C", time:"14:30", name:"Edamame y tofu con quinoa", tags:[], desc:"Edamame congelado (100g)\nTofu a la plancha (100g)\nVasito de quinoa cocida tipo Sabroz (125g)\nVerduras", note:"Cuece el edamame congelado 3-4 min en agua hirviendo o al vapor, marca el tofu a la plancha con un poco de AOVE y saltea las verduras; la quinoa Sabroz solo necesita calentarse. Día de rodaje suave, base 100% vegetal." },
+      { type:"Me", time:"17:30", name:"Fruta", tags:[], desc:"Pieza de fruta", note:"" },
+      { type:"Ce", time:"21:30", name:"Pescado blanco con verduras y patata", tags:[], desc:"Pescado blanco a la plancha (150g)\nVerduras\nPatata (200g)\nAOVE", note:"La patata puede hacerse cocida, al horno o en air fryer." }
+    ],
+    batchCooking: null
+  },
+  {
+    short: "Sáb ★",
+    full: "Sábado",
+    sport: "🏃 Rodaje largo",
+    sportClass: "run",
+    sportBanner: "Rodaje largo de la semana. Objetivo ~2800 kcal — carga fuerte de hidrato en el almuerzo antes de la tirada.",
+    suppl: null,
+    libre: true,
+    meals: [
+      { type:"D", time:"8:15", name:"Tostada integral con filadelfia light", tags:[], desc:"Pan integral tostado (2 rebanadas)\nFiladelfia light\nCafé con bebida de soja\nFruta", note:"" },
+      { type:"A", time:"11:30", name:"Fruta + frutos secos", tags:[], desc:"Pieza de fruta\nFrutos secos", note:"Antes de la tirada larga. Sustituye a la barrita habitual; también tiene cabida puntual si te apetece." },
+      { type:"C", time:"14:30", name:"Pasta blanca con atún y AOVE", tags:[], desc:"Pasta blanca (80g en crudo)\nAtún al natural\nAOVE\nVerdura", note:"Carga fuerte de hidrato — día de rodaje largo." },
+      { type:"Me", time:"17:30", name:"Fruta + puñado de cereales de avena", tags:[], desc:"Pieza de fruta\nPuñado de cereales de avena Mercadona (20-25g)", note:"Día fuerte (rodaje largo) — el puñado de cereales aporta algo más de hidrato." },
+      { type:"Ce", time:"21:30", name:"Cena libre", tags:[], desc:"", note:"Cena libre semanal — herramienta de adherencia.", libre:true }
+    ],
+    batchCooking: null
+  },
+  {
+    short: "Dom",
+    full: "Domingo",
+    sport: "🚴 Bici / descanso",
+    sportClass: "rest",
+    sportBanner: "Salida en bici suave o descanso. Objetivo ~2100 kcal — el día de menor gasto de la semana.",
+    suppl: "Si la salida en bici supera las 2h: 60-90g CHO/hora (isotónico, geles o maltodextrina).\nMagnesio + Ashwagandha antes de dormir, como cada noche.\nAprovecha hoy para el batch cooking semanal si tienes tiempo (opcional).",
+    libre: false,
+    meals: [
+      { type:"D", time:"8:15", name:"Cereales de avena con bebida de soja", tags:[], desc:"Cereales de avena Mercadona (50g)\nCafé con bebida de soja\nFruta", note:"" },
+      { type:"A", time:"11:30", name:"Yogur de soja con fruta", tags:[], desc:"Yogur de soja\nFruta", note:"" },
+      { type:"C", time:"14:30", name:"Lentejas con verduras y salmón", tags:["receta"], desc:"Lentejas cocidas (150g)\nVerduras\nSalmón (120g)\nAOVE", note:"Sofríe las verduras troceadas, añade las lentejas cocidas con un poco de agua o caldo y deja reducir; marca el salmón a la plancha aparte. Receta completa más abajo." },
+      { type:"Me", time:"17:30", name:"Fruta", tags:[], desc:"Pieza de fruta", note:"" },
+      { type:"Ce", time:"21:30", name:"Tofu o legumbre con verduras (ligera)", tags:[], desc:"Tofu o legumbre (120g)\nVerduras al vapor\nAOVE", note:"Cena ligera, día de menor gasto energético. Opción alternativa: crema de verduras comercial + picatostes + un puñado de legumbre o tofu salteado como aporte extra de proteína." }
+    ],
+    batchCooking: {
+      title: "🍲 Batch cooking del domingo (opcional)",
+      items: [
+        "Lentejas cocidas (para lunes y domingo)",
+        "Garbanzos cocidos (para miércoles)",
+        "Arroz integral cocido",
+        "Tofu marinado con un toque de salsa teriyaki (2-3 raciones)",
+        "Verduras troceadas o asadas para varios días"
+      ],
+      note: "60-90 min cociendo en paralelo. Herramienta opcional de organización, no obligatoria — el plan funciona igual sin ella."
+    }
+  }
+];
+
+const shopCategories = [
+  { label: "🫘 Proteínas", cls: "cat-prot", items: [
+      { name: "Salmón fresco", qty: "300 g (2 raciones)" },
+      { name: "Atún al natural (lata)", qty: "4-5 latas" },
+      { name: "Caballa fresca", qty: "120 g (1 ración)" },
+      { name: "Merluza fresca", qty: "300 g (2 raciones)" },
+      { name: "Pescado blanco variado", qty: "150 g (1 ración)" },
+      { name: "Tofu firme", qty: "450 g" },
+      { name: "Tofu marinado (batch)", qty: "300 g" },
+      { name: "Edamame congelado", qty: "150 g" },
+      { name: "Salsa teriyaki comercial", qty: "1 bote pequeño" },
+      { name: "Lentejas secas", qty: "300 g" },
+      { name: "Garbanzos secos o cocidos", qty: "250 g" },
+      { name: "Yogur de soja", qty: "7 uds" },
+      { name: "Bebida de soja o avellana", qty: "2 L" },
+      { name: "Hummus", qty: "2 tarrinas (~400 g)" }
+  ]},
+  { label: "🌾 Carbohidratos", cls: "cat-carb", items: [
+      { name: "Pasta blanca", qty: "300 g" },
+      { name: "Arroz integral", qty: "150 g" },
+      { name: "Vasitos de quinoa cocida (tipo Sabroz)", qty: "2 uds (125 g c/u)" },
+      { name: "Boniato", qty: "300 g" },
+      { name: "Cuscús", qty: "100 g" },
+      { name: "Pan integral (rebanadas)", qty: "1 barra o molde" },
+      { name: "Patata", qty: "1,2 kg" },
+      { name: "Harina de avena", qty: "400 g" },
+      { name: "Cereales de avena Mercadona", qty: "550 g" },
+      { name: "Fruta variada (plátano, manzana, naranja, kiwi)", qty: "~2,5 kg" }
+  ]},
+  { label: "🥑 Grasas", cls: "cat-fat", items: [
+      { name: "AOVE", qty: "1 botella (500 ml)" },
+      { name: "Aguacate", qty: "2 uds" },
+      { name: "Filadelfia light", qty: "1 tarrina (200 g)" },
+      { name: "Frutos secos variados", qty: "200 g" }
+  ]},
+  { label: "🧄 Extras", cls: "cat-extra", items: [
+      { name: "Verduras variadas (calabacín, pimiento, zanahoria, brócoli, espinaca, tomate)", qty: "~2 kg" },
+      { name: "Cebolla y ajo", qty: "al gusto" },
+      { name: "Especias (pimentón, orégano, comino, canela)", qty: "al gusto" },
+      { name: "Limón", qty: "2-3 uds" },
+      { name: "Crema de verduras comercial", qty: "1 ud (para domingo)" },
+      { name: "Picatostes", qty: "1 bolsa pequeña" },
+      { name: "Café", qty: "según consumo" },
+      { name: "Isotónico / geles / maltodextrina", qty: "para salida larga en bici" },
+      { name: "Sal", qty: "al gusto" }
+  ]}
+];
+
+const recetas = [
+  {
+    emoji: "🍲",
+    nombre: "Lentejas estofadas con verduras y salmón",
+    tiempo: "⏱ 35 min",
+    raciones: "🍽 1 persona",
+    utensilios: "🔥 Fogones",
+    ingredientes: ["150-180g lentejas cocidas", "1/2 calabacín", "1/2 pimiento", "1 zanahoria", "1 diente de ajo", "120-150g salmón", "AOVE", "Especias al gusto"],
+    pasos: [
+      "Sofríe el ajo, la zanahoria y el pimiento troceados en un chorrito de AOVE a fuego medio durante 5-6 minutos.",
+      "Añade el calabacín troceado y cocina 3-4 minutos más.",
+      "Incorpora las lentejas cocidas, cubre con un poco de agua o caldo y deja reducir 10 minutos a fuego bajo.",
+      "En una sartén aparte, marca el salmón a la plancha 3-4 minutos por cada lado.",
+      "Sirve las lentejas con el salmón encima y un hilo de AOVE en crudo."
+    ],
+    tip: "💡 Prepara el doble de lentejas el domingo (batch cooking) y tenlas listas para lunes y domingo."
+  },
+  {
+    emoji: "🥘",
+    nombre: "Tofu marinado salteado con verduras",
+    tiempo: "⏱ 25 min (+ marinado)",
+    raciones: "🍽 2-3 personas (para batch)",
+    utensilios: "🔥 Fogones / Air fryer",
+    ingredientes: ["300g tofu firme", "Salsa de soja", "1 cucharada sopera de salsa teriyaki (opcional)", "1 diente de ajo", "Jengibre al gusto", "Verduras variadas al gusto", "AOVE"],
+    pasos: [
+      "Corta el tofu en dados y marínalo con salsa de soja, la cucharada de teriyaki, ajo picado y jengibre durante al menos 30 minutos (o de un día para otro).",
+      "Saltea el tofu marinado en la sartén o en el air fryer hasta que quede dorado por fuera.",
+      "En la misma sartén, saltea las verduras troceadas con un chorrito de AOVE.",
+      "Junta el tofu con las verduras y sirve caliente, o guarda en tuppers para el resto de la semana."
+    ],
+    tip: "💡 Es la base perfecta del batch cooking del domingo: dura 3-4 días en la nevera sin perder textura. La cucharada de teriyaki es opcional, solo para dar un toque extra de sabor."
+  },
+  {
+    emoji: "🥣",
+    nombre: "Porridge de harina de avena",
+    tiempo: "⏱ 8 min",
+    raciones: "🍽 1 persona",
+    utensilios: "🔥 Fogones",
+    ingredientes: ["40-50g harina de avena", "200ml bebida de soja", "Canela al gusto", "Fruta troceada"],
+    pasos: [
+      "Calienta la bebida de soja en un cazo a fuego medio.",
+      "Añade la harina de avena poco a poco sin dejar de remover, para que no se formen grumos.",
+      "Cocina 3-4 minutos removiendo hasta conseguir una textura cremosa tipo gachas (no de copos enteros).",
+      "Sirve con canela y la fruta troceada por encima."
+    ],
+    tip: "💡 La textura tipo gachas es clave — evita el porridge de copos enteros, que es lo que no le entra."
+  }
+];
+
+function badgeClass(type, libre) {
+  if (libre) return "badge-libre";
+  const map = { D:"badge-d", A:"badge-a", Me:"badge-me", C:"badge-c", Ce:"badge-ce" };
+  return map[type] || "badge-c";
+}
+function badgeLabel(type, libre) {
+  if (libre) return "Libre";
+  const map = { D:"Desayuno", A:"Almuerzo", Me:"Merienda", C:"Comida", Ce:"Cena" };
+  return map[type] || type;
+}
+
+let current = 0;
+
+function render() {
+  const d = days[current];
+  let html = `<div style="font-size:18px;font-weight:500;color:#111;margin-bottom:8px">${d.full}</div>`;
+  html += `<div class="pn-sport-banner ${d.sportClass}">${d.sport} — ${d.sportBanner}</div>`;
+  if (d.libre) html += `<div class="pn-libre-banner">La cena de este día está reservada como comida libre. El resto del día mantiene la base vegetal habitual.</div>`;
+  if (d.suppl) html += `<div class="pn-supp-banner">` + d.suppl.replace(/\n/g,"<br>") + `</div>`;
+  if (d.batchCooking) {
+    const bc = d.batchCooking;
+    const items = bc.items.map(i => `<li>${i}</li>`).join("");
+    html += `<div class="pn-batch-section"><h3>${bc.title}</h3><ul>${items}</ul><div class="bc-note">⏱ ${bc.note}</div></div>`;
+  }
+  html += `<div class="pn-meals">`;
+  d.meals.forEach(m => {
+    const bc = badgeClass(m.type, m.libre);
+    const bl = badgeLabel(m.type, m.libre);
+    let tagsHtml = "";
+    if (m.tags && m.tags.includes("extra")) tagsHtml += `<span class="pn-extra-tag">🥡 Hacer cantidad extra</span> `;
+    if (m.tags && m.tags.includes("batch")) tagsHtml += `<span class="pn-batch-tag">♻️ Usar del batch cooking</span> `;
+    if (m.tags && m.tags.includes("receta")) tagsHtml += `<span class="pn-receta-tag">📖 Receta disponible abajo</span> `;
+    const rawParts = m.desc.split(/\n/).map(s => s.trim()).filter(s => s.length > 0);
+    let ingsHtml = rawParts.map(part => `<span class="pn-ing">${part}</span>`).join("");
+    html += `
+      <div class="pn-card">
+        <div class="pn-meal-header">
+          <span class="pn-badge ${bc}">${bl}</span>
+          <span class="pn-time">${m.time}</span>
+        </div>
+        ${tagsHtml ? `<div style="margin-bottom:6px">${tagsHtml}</div>` : ""}
+        <div class="pn-name">${m.name}</div>
+        <div class="pn-ing-list">${ingsHtml}</div>
+        <div class="pn-note">Adaptación: ${m.note}</div>
+      </div>`;
+  });
+  html += `</div>`;
+  document.getElementById("dayView").innerHTML = html;
+}
+
+function buildTabs() {
+  const container = document.getElementById("dayTabs");
+  days.forEach((d, i) => {
+    const btn = document.createElement("button");
+    btn.className = "pn-day-btn" + (i === 0 ? " active" : "");
+    btn.textContent = d.short;
+    btn.onclick = () => {
+      document.querySelectorAll(".pn-day-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      current = i;
+      render();
+    };
+    container.appendChild(btn);
+  });
+}
+
+let shopCurrent = 0;
+
+function renderShop() {
+  const cat = shopCategories[shopCurrent];
+  let html = '<div class="pn-shop-list">';
+  cat.items.forEach(item => {
+    html += `<div class="pn-shop-item ${cat.cls}" onclick="this.classList.toggle('done')">
+      <div class="pn-shop-item-name">${item.name}</div>
+      <div class="pn-shop-item-qty">${item.qty}</div>
+    </div>`;
+  });
+  html += '</div>';
+  document.getElementById("shopView").innerHTML = html;
+}
+
+function buildShopTabs() {
+  const container = document.getElementById("shopTabs");
+  shopCategories.forEach((cat, i) => {
+    const btn = document.createElement("button");
+    btn.className = "pn-shop-btn " + cat.cls + (i === 0 ? " active" : "");
+    btn.textContent = cat.label;
+    btn.onclick = () => {
+      document.querySelectorAll(".pn-shop-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      shopCurrent = i;
+      renderShop();
+    };
+    container.appendChild(btn);
+  });
+}
+
+function buildRecetas() {
+  if (typeof recetas === "undefined" || !recetas.length) return;
+  const container = document.getElementById("recetasList");
+  if (!container) return;
+  recetas.forEach((r, i) => {
+    const div = document.createElement("div");
+    div.className = "pn-receta";
+    div.innerHTML = `
+      <div class="pn-receta-header" onclick="toggleReceta(${i})">
+        <div class="pn-receta-title">${r.emoji} ${r.nombre}</div>
+        <span class="pn-receta-arrow">▸</span>
+      </div>
+      <div class="pn-receta-body">
+        <div class="pn-receta-meta">
+          <span class="pn-receta-meta-pill">${r.tiempo}</span>
+          <span class="pn-receta-meta-pill">${r.raciones}</span>
+          <span class="pn-receta-meta-pill">${r.utensilios}</span>
+        </div>
+        <div class="pn-receta-section">🧺 Ingredientes</div>
+        <div class="pn-receta-ings">${r.ingredientes.map(ing => `<span class="pn-receta-ing">${ing}</span>`).join("")}</div>
+        <div class="pn-receta-section">👨‍🍳 Elaboración</div>
+        <ol class="pn-receta-steps">${r.pasos.map((p,n) => `<li class="pn-receta-step"><span class="pn-receta-step-num">${n+1}</span><span>${p}</span></li>`).join("")}</ol>
+        <div class="pn-receta-tip">${r.tip}</div>
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+function toggleReceta(i) {
+  const cards = document.querySelectorAll(".pn-receta");
+  cards[i].classList.toggle("open");
+}
+
+buildTabs();
+render();
+buildShopTabs();
+renderShop();
+buildRecetas();
+</script>
+
+</body>
+</html>
