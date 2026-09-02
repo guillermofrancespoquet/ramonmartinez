@@ -377,7 +377,7 @@
           <td style="background:#f9fcf5;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Tostada integral + hummus</td>
           <td style="background:#f9fcf5;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Porridge harina de avena</td>
           <td style="background:#f9fcf5;padding:8px 10px;border-right:1px solid #eee;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Tostada integral + filadelfia light</td>
-          <td style="background:#f9fcf5;padding:8px 10px;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Cereales de avena + bebida soja</td>
+          <td style="background:#f9fcf5;padding:8px 10px;border-bottom:1px solid #eee;text-align:center;color:#333;line-height:1.4;">Cereales de avena + bebida soja (o tortitas de avena y plátano)</td>
         </tr>
         <tr>
           <td style="background:#f7f7f7;padding:8px 6px;border-right:2px solid #e0e0e0;border-bottom:1px solid #eee;text-align:center;vertical-align:middle;"><span class="pn-badge badge-a" style="display:inline-block;">A</span></td>
@@ -450,7 +450,7 @@
     <div class="pn-supl-item"><div class="pn-supl-dot"></div><div><strong>Cafeína (café)</strong> — pre-entreno en días de series, fuerza y rodaje largo. Ayuda ergogénica bien respaldada; se prioriza en formato café sobre pastilla. En las sesiones de tarde es opcional: puede mejorar el rendimiento, pero tomada varias horas antes de dormir puede empeorar la calidad del sueño — decide tú según cómo te sienta ese día.</div></div>
     <div class="pn-supl-item"><div class="pn-supl-dot"></div><div><strong>Carbohidratos intra-entreno</strong> — geles, isotónico o maltodextrina/dextrosas en salidas de bici o tiradas largas superiores a 2h: 60–90 g CHO/hora. Se irá incorporando de forma progresiva en las tiradas largas de cara al maratón.</div></div>
     <div class="pn-supl-item"><div class="pn-supl-dot"></div><div><strong>Magnesio + Ashwagandha</strong> — antes de dormir. Evidencia limitada de efecto real, pero se mantiene porque te funciona (mejora percibida del descanso) y no hay contraindicación.</div></div>
-    <div class="pn-supl-item"><div class="pn-supl-dot"></div><div><strong>Batido de proteína</strong> — uso puntual, no como sustitución habitual de comidas. Reservado para momentos de verdadera falta de tiempo o apetito.</div></div>
+    <div class="pn-supl-item"><div class="pn-supl-dot"></div><div><strong>Batido de proteína</strong> — uso puntual, no como sustitución habitual de comidas. El momento donde más sentido tiene es el almuerzo de las 11:30 en el trabajo, como alternativa rápida a la barrita cuando falta tiempo o apetito real; el resto de la semana no es necesario.</div></div>
   </div>
 </div>
 
@@ -486,7 +486,7 @@ const days = [
     libre: false,
     meals: [
       { type:"D", time:"8:15", name:"Tostada integral con hummus y aguacate", tags:[], desc:"Pan integral tostado (2 rebanadas)\nHummus\n1/4 aguacate\nCafé con bebida de soja o avellana\nFruta de temporada", note:"Sustituye la tostada con filadelfia y el café con leche de vaca por esta opción, manteniendo el café pero con la bebida vegetal." },
-      { type:"A", time:"11:30", name:"Fruta + frutos secos", tags:[], desc:"Pieza de fruta\nFrutos secos (25-30g)", note:"Sustituye a la barrita proteica del trabajo. Si algún día tienes mucho ajetreo o simplemente te apetece, la barrita también tiene cabida puntualmente." },
+      { type:"A", time:"11:30", name:"Fruta + frutos secos", tags:[], desc:"Pieza de fruta\nFrutos secos (25-30g)", note:"Sustituye a la barrita proteica del trabajo. Si algún día tienes mucho ajetreo o simplemente te apetece, la barrita también tiene cabida puntualmente, o puedes optar por un batido de proteína como alternativa rápida — opcional, no es necesario nutricionalmente, solo por conveniencia." },
       { type:"C", time:"14:30", name:"Lentejas estofadas con verduras y salmón", tags:["receta"], desc:"Lentejas cocidas (150-180g)\nVerduras salteadas (calabacín, zanahoria, pimiento)\nSalmón a la plancha (120-150g)\nAOVE", note:"Legumbre como base proteica+CHO; sin necesidad de carga extra de hidrato en día de rodaje suave. Receta completa más abajo." },
       { type:"Me", time:"17:30", name:"Fruta", tags:[], desc:"Pieza de fruta de temporada", note:"Snack ligero de media tarde." },
       { type:"Ce", time:"21:30", name:"Tofu salteado con verduras y patata", tags:[], desc:"Tofu firme salteado (150g)\nVerduras al gusto\nPatata (200g)\nAOVE", note:"Cena ligera con proteína vegetal. La patata puede hacerse cocida, al horno o en air fryer — al gusto." }
@@ -503,10 +503,10 @@ const days = [
     libre: false,
     meals: [
       { type:"D", time:"8:15", name:"Tostada integral con filadelfia light", tags:[], desc:"Pan integral tostado (2 rebanadas)\nFiladelfia light\nCafé con bebida de soja o avellana\nFruta", note:"Mantenemos esta opción como preferencia habitual; solo cambia la leche de vaca por bebida de soja, manteniendo el café con leche de siempre." },
-      { type:"A", time:"11:30", name:"Tostada con hummus (o barrita puntual)", tags:[], desc:"Pan integral o tortitas de arroz\nHummus\nFruta", note:"Sustituye a la barrita habitual. Si tienes mucho ajetreo o te apetece, la barrita tiene cabida puntualmente." },
+      { type:"A", time:"11:30", name:"Tostada con hummus (o barrita puntual)", tags:[], desc:"Pan integral o tortitas de arroz\nHummus\nFruta", note:"Sustituye a la barrita habitual. Si tienes mucho ajetreo o te apetece, la barrita tiene cabida puntualmente, o puedes optar por un batido de proteína como alternativa rápida — opcional, no es necesario nutricionalmente, solo por conveniencia." },
       { type:"C", time:"14:30", name:"Pasta blanca con atún y AOVE", tags:[], desc:"Pasta blanca (75-80g en crudo)\nAtún al natural (1-2 latas)\nAOVE\nTomate o verdura salteada", note:"Carga de hidrato de rápida digestión antes de las series de la tarde." },
       { type:"Me", time:"17:30", name:"Fruta + café pre-entreno", tags:[], desc:"Pieza de fruta\nPuñado de cereales de avena Mercadona (20-25g)\nCafé (opcional, aliado ergogénico)", note:"El café 30-60' antes de la sesión de series ayuda al rendimiento, aunque tomado por la tarde puede restar calidad al sueño — decide tú según cómo te sienta ese día. El puñado de cereales aporta algo más de hidrato para la sesión de series." },
-      { type:"Ce", time:"21:30", name:"Filete de pescado blanco con verduras y arroz", tags:[], desc:"Merluza o similar a la plancha (150g)\nVerduras al vapor o salteadas\nArroz integral, quinoa, cuscús o boniato (una ración)\nAOVE", note:"Cena post-series: en días de series/rodaje el carbohidrato nocturno es necesario para reponer el glucógeno, no solo proteína y verdura." }
+      { type:"Ce", time:"21:30", name:"Filete de pescado blanco con verduras y arroz", tags:[], desc:"Merluza o similar a la plancha (150g)\nVerduras al vapor o salteadas\nArroz integral (60g crudo / ~150g cocido) o quinoa (50g crudo / ~130g cocido) o cuscús (50g crudo / ~130g cocido) o boniato (200g en crudo)\nAOVE", note:"Cena post-series: en días de series/rodaje el carbohidrato nocturno es necesario para reponer el glucógeno, no solo proteína y verdura." }
     ],
     batchCooking: null
   },
@@ -520,7 +520,7 @@ const days = [
     libre: false,
     meals: [
       { type:"D", time:"8:15", name:"Cereales de avena con bebida de soja", tags:[], desc:"Cereales de avena Mercadona (50-60g)\nCafé con bebida de soja o avellana\nFruta troceada", note:"Alternativa a copos/overnight oats que no le entran por textura." },
-      { type:"A", time:"11:30", name:"Yogur de soja con fruta", tags:[], desc:"Yogur de soja\nFruta\nFrutos secos", note:"Sustituye a la barrita habitual; también tiene cabida puntual si tienes ajetreo." },
+      { type:"A", time:"11:30", name:"Yogur de soja con fruta", tags:[], desc:"Yogur de soja (125g)\nFruta\nFrutos secos", note:"Sustituye a la barrita habitual; también tiene cabida puntual si tienes ajetreo, igual que un batido de proteína como opción rápida — opcional, no necesario nutricionalmente, solo por conveniencia." },
       { type:"C", time:"14:30", name:"Garbanzos con arroz integral y caballa", tags:[], desc:"Garbanzos cocidos (150-180g)\nArroz integral (60g en crudo)\nCaballa a la plancha (120g)\nVerduras\nZumo de limón, comino y pimentón", note:"Combinación legumbre+cereal para completar aminoácidos; buena carga antes de fuerza. El limón, comino y pimentón dan un toque de sabor sin apenas sumar calorías." },
       { type:"Me", time:"17:30", name:"Fruta + puñado de cereales de avena", tags:[], desc:"Pieza de fruta\nPuñado de cereales de avena Mercadona (20-25g)", note:"Día fuerte (fuerza + carrera) — el puñado de cereales aporta algo más de hidrato de cara al entreno de la tarde." },
       { type:"Ce", time:"21:30", name:"Tofu marinado con verduras y patata", tags:["batch","receta"], desc:"Tofu marinado (150g)\n1 cucharada sopera de salsa teriyaki\nVerduras asadas\nPatata (200g)\nAOVE", note:"Usa el tofu marinado preparado en el batch cooking del domingo; la salsa teriyaki le da un toque extra de sabor. La patata puede hacerse al horno o en air fryer. Receta completa más abajo." }
@@ -537,10 +537,10 @@ const days = [
     libre: false,
     meals: [
       { type:"D", time:"8:15", name:"Tostada integral con hummus", tags:[], desc:"Pan integral tostado (2 rebanadas)\nHummus\nCafé con bebida de soja\nFruta", note:"" },
-      { type:"A", time:"11:30", name:"Fruta + frutos secos", tags:[], desc:"Pieza de fruta\nFrutos secos (25-30g)", note:"Sustituye a la barrita habitual; también tiene cabida puntual si tienes ajetreo o te apetece." },
+      { type:"A", time:"11:30", name:"Fruta + frutos secos", tags:[], desc:"Pieza de fruta\nFrutos secos (25-30g)", note:"Sustituye a la barrita habitual; también tiene cabida puntual si tienes ajetreo o te apetece, igual que un batido de proteína como opción rápida — opcional, no necesario nutricionalmente, solo por conveniencia." },
       { type:"C", time:"14:30", name:"Pasta blanca con atún y AOVE", tags:[], desc:"Pasta blanca (75-80g en crudo)\nAtún al natural\nAOVE\nVerdura salteada", note:"Carga de hidrato habitual antes de la sesión de cambios de ritmo." },
       { type:"Me", time:"17:30", name:"Fruta + café pre-entreno", tags:[], desc:"Pieza de fruta\nPuñado de cereales de avena Mercadona (20-25g)\nCafé (opcional)", note:"Día de series — el café es opcional y puede ayudar al rendimiento, aunque por la tarde puede restar calidad al sueño; decide tú. El puñado de cereales aporta algo más de hidrato." },
-      { type:"Ce", time:"21:30", name:"Merluza con verduras y quinoa", tags:[], desc:"Merluza a la plancha (150g)\nVerduras al vapor\nQuinoa, arroz integral, cuscús o boniato (una ración)\nAOVE", note:"En día de series el carbohidrato nocturno es necesario para reponer glucógeno, no solo proteína y verdura." }
+      { type:"Ce", time:"21:30", name:"Merluza con verduras y quinoa", tags:[], desc:"Merluza a la plancha (150g)\nVerduras al vapor\nQuinoa (50g crudo / ~130g cocido) o arroz integral (60g crudo / ~150g cocido) o cuscús (50g crudo / ~130g cocido) o boniato (200g en crudo)\nAOVE", note:"En día de series el carbohidrato nocturno es necesario para reponer glucógeno, no solo proteína y verdura." }
     ],
     batchCooking: null
   },
@@ -554,7 +554,7 @@ const days = [
     libre: false,
     meals: [
       { type:"D", time:"8:15", name:"Porridge de harina de avena", tags:["receta"], desc:"Harina de avena (40-50g) cocinada tipo gachas\nCafé con bebida de soja\nFruta\nCanela", note:"Textura tipo gachas, no copos — mejor aceptación que el overnight oats. Receta completa más abajo." },
-      { type:"A", time:"11:30", name:"Tostada con hummus (o barrita puntual)", tags:[], desc:"Pan integral o tortitas de arroz\nHummus\nFruta", note:"Sustituye a la barrita habitual; también tiene cabida puntual si te apetece." },
+      { type:"A", time:"11:30", name:"Tostada con hummus (o barrita puntual)", tags:[], desc:"Pan integral o tortitas de arroz\nHummus\nFruta", note:"Sustituye a la barrita habitual; también tiene cabida puntual si te apetece, igual que un batido de proteína como opción rápida — opcional, no necesario nutricionalmente, solo por conveniencia." },
       { type:"C", time:"14:30", name:"Edamame y tofu con quinoa", tags:[], desc:"Edamame congelado (100g)\nTofu a la plancha (100g)\nVasito de quinoa cocida tipo Sabroz (125g)\nVerduras", note:"Cuece el edamame congelado 3-4 min en agua hirviendo o al vapor, marca el tofu a la plancha con un poco de AOVE y saltea las verduras; la quinoa Sabroz solo necesita calentarse. Día de rodaje suave, base 100% vegetal." },
       { type:"Me", time:"17:30", name:"Fruta", tags:[], desc:"Pieza de fruta", note:"" },
       { type:"Ce", time:"21:30", name:"Pescado blanco con verduras y patata", tags:[], desc:"Pescado blanco a la plancha (150g)\nVerduras\nPatata (200g)\nAOVE", note:"La patata puede hacerse cocida, al horno o en air fryer." }
@@ -571,7 +571,7 @@ const days = [
     libre: true,
     meals: [
       { type:"D", time:"8:15", name:"Tostada integral con filadelfia light", tags:[], desc:"Pan integral tostado (2 rebanadas)\nFiladelfia light\nCafé con bebida de soja\nFruta", note:"" },
-      { type:"A", time:"11:30", name:"Fruta + frutos secos", tags:[], desc:"Pieza de fruta\nFrutos secos", note:"Antes de la tirada larga. Sustituye a la barrita habitual; también tiene cabida puntual si te apetece." },
+      { type:"A", time:"11:30", name:"Fruta + frutos secos", tags:[], desc:"Pieza de fruta\nFrutos secos", note:"Antes de la tirada larga. Sustituye a la barrita habitual; también tiene cabida puntual si te apetece, igual que un batido de proteína como opción rápida — opcional, no necesario nutricionalmente, solo por conveniencia." },
       { type:"C", time:"14:30", name:"Pasta blanca con atún y AOVE", tags:[], desc:"Pasta blanca (80g en crudo)\nAtún al natural\nAOVE\nVerdura", note:"Carga fuerte de hidrato — día de rodaje largo." },
       { type:"Me", time:"17:30", name:"Fruta + puñado de cereales de avena", tags:[], desc:"Pieza de fruta\nPuñado de cereales de avena Mercadona (20-25g)", note:"Día fuerte (rodaje largo) — el puñado de cereales aporta algo más de hidrato." },
       { type:"Ce", time:"21:30", name:"Cena libre", tags:[], desc:"", note:"Cena libre semanal — herramienta de adherencia.", libre:true }
@@ -587,8 +587,8 @@ const days = [
     suppl: "Si la salida en bici supera las 2h: 60-90g CHO/hora (isotónico, geles o maltodextrina).\nMagnesio + Ashwagandha antes de dormir, como cada noche.\nAprovecha hoy para el batch cooking semanal si tienes tiempo (opcional).",
     libre: false,
     meals: [
-      { type:"D", time:"8:15", name:"Cereales de avena con bebida de soja", tags:[], desc:"Cereales de avena Mercadona (50g)\nCafé con bebida de soja\nFruta", note:"" },
-      { type:"A", time:"11:30", name:"Yogur de soja con fruta", tags:[], desc:"Yogur de soja\nFruta", note:"" },
+      { type:"D", time:"8:15", name:"Cereales de avena con bebida de soja", tags:["receta"], desc:"Cereales de avena Mercadona (50g)\nCafé con bebida de soja\nFruta", note:"Opción alternativa: tortitas de avena y plátano (receta completa más abajo) — especialmente recomendadas si hoy toca salida en bici, por su aporte extra de hidrato y proteína del huevo antes del esfuerzo." },
+      { type:"A", time:"11:30", name:"Yogur de soja con fruta", tags:[], desc:"Yogur de soja (125g)\nFruta", note:"" },
       { type:"C", time:"14:30", name:"Lentejas con verduras y salmón", tags:["receta"], desc:"Lentejas cocidas (150g)\nVerduras\nSalmón (120g)\nAOVE", note:"Sofríe las verduras troceadas, añade las lentejas cocidas con un poco de agua o caldo y deja reducir; marca el salmón a la plancha aparte. Receta completa más abajo." },
       { type:"Me", time:"17:30", name:"Fruta", tags:[], desc:"Pieza de fruta", note:"" },
       { type:"Ce", time:"21:30", name:"Tofu o legumbre con verduras (ligera)", tags:[], desc:"Tofu o legumbre (120g)\nVerduras al vapor\nAOVE", note:"Cena ligera, día de menor gasto energético. Opción alternativa: crema de verduras comercial + picatostes + un puñado de legumbre o tofu salteado como aporte extra de proteína." }
@@ -622,7 +622,8 @@ const shopCategories = [
       { name: "Garbanzos secos o cocidos", qty: "250 g" },
       { name: "Yogur de soja", qty: "7 uds" },
       { name: "Bebida de soja o avellana", qty: "2 L" },
-      { name: "Hummus", qty: "2 tarrinas (~400 g)" }
+      { name: "Hummus", qty: "2 tarrinas (~400 g)" },
+      { name: "Huevos (para tortitas de avena, opcional)", qty: "2 uds" }
   ]},
   { label: "🌾 Carbohidratos", cls: "cat-carb", items: [
       { name: "Pasta blanca", qty: "300 g" },
@@ -701,6 +702,22 @@ const recetas = [
       "Sirve con canela y la fruta troceada por encima."
     ],
     tip: "💡 La textura tipo gachas es clave — evita el porridge de copos enteros, que es lo que no le entra."
+  },
+  {
+    emoji: "🥞",
+    nombre: "Tortitas de avena y plátano",
+    tiempo: "⏱ 15 min",
+    raciones: "🍽 1 persona",
+    utensilios: "🔥 Fogones (sartén antiadherente)",
+    ingredientes: ["100-120g plátano maduro", "2 huevos", "25-30g avena en copos finos o molida", "Fruta fresca o chocolate negro (mín. 70%) al gusto", "Canela al gusto"],
+    pasos: [
+      "Tritura el plátano con un tenedor o con la batidora hasta obtener una mezcla uniforme.",
+      "Añade los huevos, la avena y la canela. Mezcla bien hasta integrar todo.",
+      "Calienta una sartén antiadherente a fuego medio y vierte pequeñas porciones de la masa.",
+      "Cocina 1-2 minutos por lado, hasta que estén doradas y firmes.",
+      "Sirve con la fruta fresca o el chocolate negro por encima al gusto."
+    ],
+    tip: "💡 Opción alternativa al desayuno habitual del domingo — especialmente recomendada si toca salida en bici, por el extra de hidrato del plátano y la avena junto con la proteína del huevo. ~390 kcal, 21g proteína, 44g CHO, 13g grasa por ración."
   }
 ];
 
